@@ -53,7 +53,7 @@ public class SourceGenerator {
 
         // builder
         src.append( LINE_SEP );
-        src.append( indentation(1) + "public static class " + cls.getName() + BUILDER_SUFFIX + "{" + LINE_SEP );
+        src.append( indentation(1) + "public static class " + cls.getName() + BUILDER_SUFFIX + " {" + LINE_SEP );
 
         // declare properties
         src.append(LINE_SEP);
