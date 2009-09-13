@@ -11,5 +11,5 @@ You can download file from http://shooeugenesea-projects.googlecode.com/files/Va
 = Details =
  
  # Input class name
- # Input type and propertyNames. If rows is not enough, you can click add row button.
+ # Input type and propertyNames. If rows are not enough, you can click add row button.
  # Click generate to show source code
