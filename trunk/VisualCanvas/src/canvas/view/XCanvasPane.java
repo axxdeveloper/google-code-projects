@@ -1,0 +1,177 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+package canvas.view;
+
+import canvas.XCanvasGlobal;
+import canvas.view.helper.SwingInitiator;
+import canvas.view.persistence.XObjectScenePO;
+import canvas.view.widget.XObjectScene;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import org.netbeans.api.visual.model.ObjectScene;
+
+/**
+ *
+ * @author Isaac
+ */
+public class XCanvasPane extends javax.swing.JPanel {
+    
+    private XCanvasGlobal.OK_CANCEL editResult;
+    
+    /** Creates new form XCanvas */
+    private XCanvasPane(XObjectScene objectScene) {
+        initComponents();
+        init(objectScene);
+    }
+    
+    private void init(XObjectScene objectScene) {
+        makeScrollPaneSensitive();
+        initView(objectScene);
+        initToolBarFunctions(objectScene);
+    }
+    
+    private void makeScrollPaneSensitive() {
+        int INCH = Toolkit.getDefaultToolkit().getScreenResolution();
+        jScrollPane.getHorizontalScrollBar().setUnitIncrement( (int)((double)INCH / (double)2.54) );
+        jScrollPane.getVerticalScrollBar().setUnitIncrement( 37 );
+    }
+    
+    private void initView(ObjectScene objectScene) {
+        if ( objectScene != null ) {
+            jScrollPane.setViewportView(objectScene.createView());
+            jPanelSatellite.add(objectScene.createSatelliteView());
+        } else {
+            throw new RuntimeException( "Should prepare scene first." );
+        }
+    }
+    
+    private void initToolBarFunctions(XObjectScene objectScene) {
+        jPanelToolBar.add(SwingInitiator.initJToolBarNotation(objectScene));
+    }
+    
+    public static void main(String[] args) {
+        JButton b = new JButton("Open Canvas");
+        b.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                XCanvasPane.showXCanvas(new XObjectScenePO().createXObjectScene(), null);
+            }
+        });
+        JFrame f = new JFrame();
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        f.getContentPane().add( b );
+        f.pack();
+        f.setVisible( true );
+    }
+    
+    public static XCanvasGlobal.OK_CANCEL showXCanvas(final XObjectScene objectScene, final Component owner) {
+        
+        final JDialog jDialog = new JDialog( JOptionPane.getFrameForComponent(owner), true );
+        jDialog.setLayout(new BorderLayout());
+        
+        JPanel jPanelButtons = new JPanel();
+        jPanelButtons.setLayout(new FlowLayout());
+        
+        final XCanvasPane mainPanel = new XCanvasPane(objectScene);
+        
+        JButton jButtonOK = new JButton("OK");
+        jButtonOK.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.setEditResult(XCanvasGlobal.OK_CANCEL.OK);
+                jDialog.setVisible(false);
+                jDialog.dispose();
+            }
+        });
+        
+        JButton jButtonCancel = new JButton("Cancel");
+        jButtonCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.setEditResult(XCanvasGlobal.OK_CANCEL.CANCEL);
+                jDialog.setVisible(false);
+                jDialog.dispose();
+            }
+        });
+        
+        jPanelButtons.add(jButtonOK);
+        jPanelButtons.add(jButtonCancel);
+        jDialog.add(mainPanel, BorderLayout.CENTER);
+        jDialog.add(jPanelButtons, BorderLayout.SOUTH);
+        
+        jDialog.pack();
+        jDialog.setLocationRelativeTo(owner);
+        jDialog.setVisible(true);
+        
+        return mainPanel.getEditResult();
+    }
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanelToolBar = new javax.swing.JPanel();
+        jScrollPane = new javax.swing.JScrollPane();
+        jPanelWest = new javax.swing.JPanel();
+        jPanelSatellite = new javax.swing.JPanel();
+
+        setLayout(new java.awt.BorderLayout());
+
+        jPanelToolBar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        add(jPanelToolBar, java.awt.BorderLayout.NORTH);
+        add(jScrollPane, java.awt.BorderLayout.CENTER);
+
+        jPanelWest.setLayout(new java.awt.BorderLayout());
+
+        jPanelSatellite.setLayout(new java.awt.BorderLayout());
+        jPanelWest.add(jPanelSatellite, java.awt.BorderLayout.CENTER);
+
+        add(jPanelWest, java.awt.BorderLayout.WEST);
+    }// </editor-fold>//GEN-END:initComponents
+    
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanelSatellite;
+    private javax.swing.JPanel jPanelToolBar;
+    private javax.swing.JPanel jPanelWest;
+    private javax.swing.JScrollPane jScrollPane;
+    // End of variables declaration//GEN-END:variables
+
+    private XCanvasGlobal.OK_CANCEL getEditResult() {
+        if ( editResult == null ) {
+            editResult = XCanvasGlobal.OK_CANCEL.CANCEL;
+        }
+        return editResult;
+    }
+
+    private void setEditResult(XCanvasGlobal.OK_CANCEL editResult) {
+        this.editResult = editResult;
+    }
+
+}
