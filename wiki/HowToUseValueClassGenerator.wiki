@@ -6,6 +6,7 @@
 The value class source code use builder pattern to avoid growing constructor parameters.
 This builder pattern referenced to Effective Java 2nd.
 
+You can download file from http://shooeugenesea-projects.googlecode.com/files/ValueClassGenerator.zip
 
 = Details =
  
