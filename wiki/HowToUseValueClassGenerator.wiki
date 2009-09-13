@@ -1,0 +1,14 @@
+#summary Describe how to use ValueClassGenerator
+
+= Introduction =
+
+ValueClassGenerator is a simple tool used to generate value class source code.
+The value class source code use builder pattern to avoid growing constructor parameters.
+This builder pattern referenced to Effective Java 2nd.
+
+
+= Details =
+
+# Input class name
+# Input type and propertyNames. If rows is not enough, you can click add row button.
+# Click generate to show source code
